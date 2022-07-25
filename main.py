@@ -18,6 +18,8 @@ def clear_name(name):
     for ch in ['^0','^1','^2','^3','^4','^5','^6','^7','^8','^9']:
         if ch in name:
             name = name.replace(ch,"")
+        if name == "":
+            name = "unnamed"
     return name
 
 def get_server_info(response_server_address): #получение информации о сервере
