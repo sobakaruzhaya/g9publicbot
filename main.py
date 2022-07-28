@@ -11,7 +11,7 @@ client = commands.Bot(command_prefix='g9.')
 
 @client.event
 async def on_ready():
-    await client.change_presence(status= discord.Status.online, activity = discord.Game('g9.findpayers') )
+    await client.change_presence(status= discord.Status.online, activity = discord.Game('g9.findplayers') )
 
 
 def clear_name(name):
