@@ -1,17 +1,23 @@
 import asyncio
-
+import p5.aiogoldsrcrcon
 import discord
 from discord.ext import commands
 import a2s
-import steam
-import requests
 from steam import game_servers as gs
+
+async def rcon_cmd(ip1, port1, password1, command1):
+    #async def _coroutine():
+    async with p5.aiogoldsrcrcon.Connection(address = (ip1, port1), password = password1) as _connection:
+        await _connection.open()
+        _response = await _connection.execute(command = command1)
+        return(_response.strip())
+
 
 client = commands.Bot(command_prefix='g9.')
 
 @client.event
 async def on_ready():
-    await client.change_presence(status= discord.Status.online, activity = discord.Game('g9.findplayers') )
+    await client.change_presence(status= discord.Status.online, activity = discord.Game('/findplayers') )
 
 
 def clear_name(name):
@@ -33,8 +39,17 @@ def get_server_info(response_server_address): #получение информа
         embed.add_field(name = row[1], value = row[0], inline=True)
     return embed #возвращает ембед с названием сервера, его ип, картой и списком игроков
 
-@client.command()
-async def findplayers(ctx):
+@client.slash_command(
+
+    name = "findplayers", 
+    description="отображает сервера где в даннный момент присутствуют игроки",
+    required=False,
+    default=''
+)
+async def findplayers(
+    ctx: discord.ApplicationContext,
+):
+    await ctx.respond("Cервера где в даннный момент присутствуют игроки:")
     Servercount = 0
     Playercount = 0
     Serversnotresp = 0
@@ -59,5 +74,20 @@ async def findplayers(ctx):
     await ctx.send("**Bot invate link: https://discord.gg/sKrmadaTWJ **")
     await ctx.send("**Ag community server: https://discord.gg/nVP3NPZeqR **")
 
+@client.slash_command(
+
+    name = "rcon", 
+    description="отправляет ркон команду на сервер",
+    required=False,
+    default=''
+)
+async def rcon(
+    ctx: discord.ApplicationContext,
+    ip: str,
+    port: int,
+    password: str,
+    command: str
+):
+    await ctx.respond(await rcon_cmd(ip, port, password, command))
 
 client.run('token')
