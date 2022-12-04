@@ -1,9 +1,12 @@
 import asyncio
 import p5.aiogoldsrcrcon
 import discord
+from discord.commands import option
 from discord.ext import commands
 import a2s
 from steam import game_servers as gs
+from simpledemotivators import *
+
 
 async def rcon_cmd(ip1, port1, password1, command1):
     #async def _coroutine():
@@ -89,5 +92,44 @@ async def rcon(
     command: str
 ):
     await ctx.respond(await rcon_cmd(ip, port, password, command))
+
+@client.slash_command(
+name = "demotivator",
+description="Делает демотиватор",
+required=True,
+
+)
+@option(
+"text2",
+required=False,
+default=''
+)
+async def dem(
+	ctx: discord.ApplicationContext,
+	url: str,
+	text1: str,
+	text2=""):
+	dem = Demotivator(text1, text2) 
+	dem.create(url, use_url='True', delete_file='True')
+	await ctx.respond("Интересный факт #589: Zhukow может аимить", ephemeral=True)
+	await ctx.send(file=discord.File(r'demresult.jpg'))
+
+@client.slash_command(
+name = "quote",
+description="Делает цитату",
+required=True,
+    #default=''
+)
+async def quote(self,
+	ctx: discord.ApplicationContext,
+	author_id: str,
+	quote: str):
+	person = self.client.get_user(int(author_id))
+	avatar_url = person.avatar
+	dem = Quote(quote, str(person.name)) 
+	dem.create(avatar_url, use_url='True')
+	await ctx.respond("Интересный факт #343: dom.ru лучший провайдер", ephemeral=True)
+	await ctx.send(file=discord.File(r'qresult.png'))
+
 
 client.run('token')
