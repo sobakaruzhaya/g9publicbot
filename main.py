@@ -120,11 +120,11 @@ description="Делает цитату",
 required=True,
     #default=''
 )
-async def quote(self,
+async def quote(
 	ctx: discord.ApplicationContext,
 	author_id: str,
 	quote: str):
-	person = self.client.get_user(int(author_id))
+	person = client.get_user(int(author_id))
 	avatar_url = person.avatar
 	dem = Quote(quote, str(person.name)) 
 	dem.create(avatar_url, use_url='True')
