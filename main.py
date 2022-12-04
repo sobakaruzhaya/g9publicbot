@@ -114,22 +114,21 @@ async def dem(
 	await ctx.respond("Интересный факт #589: Zhukow может аимить", ephemeral=True)
 	await ctx.send(file=discord.File(r'demresult.jpg'))
 
-@client.slash_command(
+@commands.slash_command(
 name = "quote",
 description="Делает цитату",
 required=True,
-    #default=''
+
 )
-async def quote(
+async def quote(self,
 	ctx: discord.ApplicationContext,
-	author_id: str,
+	user: discord.User,
 	quote: str):
-	person = client.get_user(int(author_id))
+	person = self.client.get_user(user.id)
 	avatar_url = person.avatar
 	dem = Quote(quote, str(person.name)) 
 	dem.create(avatar_url, use_url='True')
 	await ctx.respond("Интересный факт #343: dom.ru лучший провайдер", ephemeral=True)
 	await ctx.send(file=discord.File(r'qresult.png'))
-
 
 client.run('token')
